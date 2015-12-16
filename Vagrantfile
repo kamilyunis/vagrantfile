@@ -21,13 +21,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.define :salt do |salt|
     salt.vm.box = "anchorbox"
+    salt.ssh.password = "root"
+    salt.ssh.password = "vagrant"
     salt.vm.host_name = 'salt'
     salt.vm.network "private_network", ip: "192.168.50.10"
     salt.vm.synced_folder "salt/salt/", "/srv/salt"
+    salt.vm.synced_folder "salt/pillar/", "/srv/pillar"
    
    salt.vm.provision :salt do |salt|
        salt.minion_config = "salt/etc/minion"
-#       salt.run_highstate = true
+       salt.run_highstate = true
        salt.verbose = true
 
 #	salt.bootstrap_script = "install_salt.sh"
@@ -45,8 +48,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 #  end
  
   web_config.vm.provision :salt do |salt|
-        salt.minion_config = "salt/etc/minion1"
-#       salt.run_highstate = true
+        salt.minion_config = "salt/etc/minion_web"
+        salt.run_highstate = true
         salt.verbose = true
 #	salt.bootstrap_script = "install_salt.sh"
 #       salt.run_highstate = true
